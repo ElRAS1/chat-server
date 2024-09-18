@@ -20,6 +20,6 @@ message SendMessageRequest {
 }
 service chatServer {
   rpc Create(CreateRequest) returns (CreateResponse);
-  rpc Delete(DeleteRequest) returns (google.protobuf.Empty) {};
-  rpc SendMessage(SendMessageRequest) returns (google.protobuf.Empty) {};
+  rpc Delete(DeleteRequest) returns (google.protobuf.Empty);
+  rpc SendMessage(SendMessageRequest) returns (google.protobuf.Empty);
 }

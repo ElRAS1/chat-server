@@ -1,0 +1,2 @@
+DROP TABLE chats IF NOT EXISTS;
+DROP TABLE chat_message IF NOT EXISTS;
