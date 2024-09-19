@@ -4,7 +4,7 @@ import (
 	"github.com/ilyakaznacheev/cleanenv"
 )
 
-const pathToCfg = "../config/config.yaml"
+const pathToCfg = "internal/config/config.yaml"
 
 type Config struct {
 	LogLevel  int    `yaml:"level" env-default:"0"`
