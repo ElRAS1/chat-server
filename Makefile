@@ -26,3 +26,9 @@ generate-chatServer-api:
 	--go-grpc_out=pkg/chatServer --go-grpc_opt=paths=source_relative \
 	--plugin=protoc-gen-go-grpc=bin/protoc-gen-go-grpc \
 	api/chatServer/chatServer.proto
+
+format:
+	go fmt ./...
+
+
+.PHONY: format generate-chatServer-api generate install-deps lint install-golangci-lint

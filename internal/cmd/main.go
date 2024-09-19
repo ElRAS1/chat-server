@@ -18,11 +18,11 @@ func main() {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	
+
 	logger := logger.ConfigureLogger(cfg.LogLevel, cfg.ConfigLog)
 	slog.SetDefault(logger)
 
-	server, listener, err := server.New(*cfg)
+	server, listener, err := server.New(logger, *cfg)
 	if err != nil {
 		log.Fatalln(err)
 	}
