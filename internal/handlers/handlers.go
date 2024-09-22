@@ -41,6 +41,11 @@ func (h *Handler) Create(ctx context.Context, req *chatServer.CreateRequest) (*c
 }
 
 func (h *Handler) Delete(ctx context.Context, req *chatServer.DeleteRequest) (*empty.Empty, error) {
+	_, err := h.Db.DeleteChat(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+	
 	return &emptypb.Empty{}, nil
 }
 func (h *Handler) SendMessage(ctx context.Context, req *chatServer.SendMessageRequest) (*empty.Empty, error) {
