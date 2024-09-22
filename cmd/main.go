@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"log/slog"
@@ -14,7 +15,7 @@ import (
 )
 
 func main() {
-	cfg, err := config.New()
+	cfg, err := config.NewServerCfg()
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -22,7 +23,9 @@ func main() {
 	logger := logger.ConfigureLogger(cfg.LogLevel, cfg.ConfigLog)
 	slog.SetDefault(logger)
 
-	server, listener, err := server.New(logger, *cfg)
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+	server, listener, storage, err := server.New(ctx, logger, *cfg)
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -38,5 +41,6 @@ func main() {
 	signal.Notify(sig, syscall.SIGINT, syscall.SIGTERM)
 	<-sig
 
+	storage.Close()
 	logger.Info("app closed...")
 }

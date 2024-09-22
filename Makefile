@@ -30,5 +30,8 @@ generate-chatServer-api:
 format:
 	go fmt ./...
 
+run:
+	go run cmd/main.go
 
-.PHONY: format generate-chatServer-api generate install-deps lint install-golangci-lint
+
+.PHONY: format generate-chatServer-api generate install-deps lint install-golangci-lint run
