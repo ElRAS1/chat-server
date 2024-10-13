@@ -1,6 +1,0 @@
-chatDbName: "chats" # Db name
-chatUsernames: "usernames" # Store array user names
-chatCreatedAt: "created_at" # Time created chat
-chatUpdatedAt: "updated_at" # Time updated chat
-
-adapter: "postgres"

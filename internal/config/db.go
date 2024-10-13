@@ -1,34 +1,30 @@
-package storage
+package config
 
 import (
 	"context"
 	"fmt"
 	"os"
-
-	"github.com/ELRAS1/chat-server/internal/config"
-	"github.com/joho/godotenv"
+	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 )
 
-type Storage struct {
-	Db  *pgxpool.Pool
-	Cfg *config.Db
-}
+const (
+	deadline = 5
+)
 
-// ConfigureStorage: configurations and database connection
-func ConfigureStorage(ctx context.Context) (*Storage, error) {
-	const nm = "[ConfigureStorage]"
+// InitializeDatabaseClient: configurations and database connection
+func InitializeDatabaseClient(ctx context.Context) (*pgxpool.Pool, error) {
+	const nm = "[InitializeDatabaseClient]"
+
+	ctx, cancel := context.WithTimeout(ctx, time.Second*deadline)
+	defer cancel()
 
 	connStr, err := newConnStr()
 	if err != nil {
 		return nil, fmt.Errorf("%s %w", nm, err)
-	}
-
-	cfg, err := config.NewDbCfg()
-	if err != nil {
-		return nil, err
 	}
 
 	db, err := pgxpool.New(ctx, connStr)
@@ -40,7 +36,7 @@ func ConfigureStorage(ctx context.Context) (*Storage, error) {
 		return nil, fmt.Errorf("%s %w", nm, err)
 	}
 
-	return &Storage{Db: db, Cfg: cfg}, nil
+	return db, nil
 }
 
 func newConnStr() (string, error) {
@@ -57,8 +53,4 @@ func newConnStr() (string, error) {
 	)
 
 	return connStr, nil
-}
-
-func (s *Storage) Close() {
-	s.Db.Close()
 }
