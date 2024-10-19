@@ -7,20 +7,20 @@ import (
 
 func ApiCreateToModel(req *chatServer.CreateRequest) *model.CreateRequest {
 	return &model.CreateRequest{
-		Usernames: req.Usernames,
+		Usernames: req.GetUsernames(),
 	}
 }
 
 func ApiDeleteToModel(req *chatServer.DeleteRequest) *model.DeleteRequest {
 	return &model.DeleteRequest{
-		Id: req.Id,
+		Id: req.GetId(),
 	}
 }
 
 func ApiSendMessageToModel(req *chatServer.SendMessageRequest) *model.SendMessageRequest {
 	return &model.SendMessageRequest{
-		From:      req.From,
-		Text:      req.Text,
+		From:      req.GetFrom(),
+		Text:      req.GetText(),
 		Timestamp: req.Timestamp.AsTime(),
 	}
 }
