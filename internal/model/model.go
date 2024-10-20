@@ -14,6 +14,7 @@ type DeleteRequest struct {
 }
 
 type SendMessageRequest struct {
+	ChatId    int64
 	From      string
 	Text      string
 	Timestamp time.Time

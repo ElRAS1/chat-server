@@ -1,2 +1,2 @@
-DROP TABLE chats IF NOT EXISTS;
-DROP TABLE chat_message IF NOT EXISTS;
+DROP TABLE chats CASCADE;
+DROP TABLE chat_messages;

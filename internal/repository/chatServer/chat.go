@@ -3,11 +3,13 @@ package chatServer
 import "github.com/jackc/pgx/v5/pgxpool"
 
 const (
-	chatDbName    = "chats"      //  Db name
-	chatUsernames = "usernames"  //  Store array usernames
-	chatCreatedAt = "created_at" // Time created chat
-	chatUpdatedAt = "updated_at" // Time updated chat
-
+	chatName      = "chats" //  Db name
+	chatMessages  = "chat_messages"
+	chatID        = "chat_id"
+	chatUsernames = "usernames"    //  Store array usernames
+	chatTimestamp = "timestamp"    // Time created chat
+	chatReceiver  = "receiver"     // receiver message
+	chatText      = "text_message" // message text
 )
 
 const (

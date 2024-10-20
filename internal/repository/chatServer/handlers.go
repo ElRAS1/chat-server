@@ -13,9 +13,9 @@ func (s *repo) Create(ctx context.Context, req *model.CreateRequest) (*model.Cre
 	ctx, cancel := context.WithTimeout(ctx, time.Second*deadline)
 	defer cancel()
 
-	query, args, err := sq.Insert(chatDbName).
-		Columns(chatUsernames, chatCreatedAt, chatUpdatedAt).
-		Values(req.Usernames, time.Now(), time.Now()).
+	query, args, err := sq.Insert(chatName).
+		Columns(chatUsernames).
+		Values(req.Usernames).
 		PlaceholderFormat(sq.Dollar).
 		Suffix("RETURNING id").
 		ToSql()
@@ -43,7 +43,7 @@ func (s *repo) Delete(ctx context.Context, req *model.DeleteRequest) error {
 	ctx, cancel := context.WithTimeout(ctx, time.Second*deadline)
 	defer cancel()
 
-	query, args, err := sq.Delete(chatDbName).
+	query, args, err := sq.Delete(chatName).
 		Where(sq.Eq{"id": req.Id}).
 		PlaceholderFormat(sq.Dollar).
 		ToSql()
@@ -72,6 +72,25 @@ func (s *repo) Delete(ctx context.Context, req *model.DeleteRequest) error {
 }
 
 func (s *repo) SendMessage(ctx context.Context, req *model.SendMessageRequest) error {
+	query, args, err := sq.Insert(chatMessages).
+		Columns(chatID, chatReceiver, chatText, chatTimestamp).
+		Values(req.ChatId, req.From, req.Text, req.Timestamp).
+		PlaceholderFormat(sq.Dollar).
+		ToSql()
+
+	if err != nil {
+		return fmt.Errorf("repo SendMessage error: %v", err)
+	}
+
+	conn, err := s.Db.Acquire(ctx)
+	if err != nil {
+		return fmt.Errorf("repo : failed to acquire database connection: %w", err)
+	}
+	defer conn.Release()
+
+	if _, err = conn.Exec(ctx, query, args...); err != nil {
+		return fmt.Errorf("repo SendMessage error: %v", err)
+	}
 
 	return nil
 }

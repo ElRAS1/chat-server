@@ -14,6 +14,7 @@ type DeleteRequest struct {
 }
 
 type SendMessageRequest struct {
+	ChatId    int64     `db:"chat_id"`
 	From      string    `db:"from"`
 	Text      string    `db:"text"`
 	Timestamp time.Time `db:"timestamp"`

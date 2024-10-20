@@ -19,6 +19,7 @@ func ApiDeleteToModel(req *chatServer.DeleteRequest) *model.DeleteRequest {
 
 func ApiSendMessageToModel(req *chatServer.SendMessageRequest) *model.SendMessageRequest {
 	return &model.SendMessageRequest{
+		ChatId:    req.GetChatId(),
 		From:      req.GetFrom(),
 		Text:      req.GetText(),
 		Timestamp: req.Timestamp.AsTime(),
