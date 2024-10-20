@@ -43,13 +43,13 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	repository := repo.New(dbClient)
+	repository := repo.New(dbClient, logger)
 
 	service := serv.New(repository)
 
 	server := grpc.NewServer()
 	reflection.Register(server)
-	chatServer.RegisterChatServerServer(server, api.New(service))
+	chatServer.RegisterChatServerServer(server, api.New(service, logger))
 
 	go func() {
 		if err = server.Serve(listener); err != nil {

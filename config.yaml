@@ -1,7 +1,7 @@
 addr: ":50052"
 network: "tcp"
 
-level: 0
+level: -4
 # LevelDebug Level = -4
 # LevelInfo  Level = 0
 # LevelWarn  Level = 4

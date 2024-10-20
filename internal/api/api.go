@@ -3,6 +3,7 @@ package api
 import (
 	"context"
 	"fmt"
+	"log/slog"
 
 	"github.com/ELRAS1/chat-server/internal/converter"
 	"github.com/ELRAS1/chat-server/internal/service"
@@ -12,24 +13,28 @@ import (
 
 type Api struct {
 	*chatServer.UnimplementedChatServerServer
-	serv service.ChatServer
+	serv   service.ChatServer
+	logger slog.Logger
 }
 
-func New(srv service.ChatServer) *Api {
+func New(srv service.ChatServer, log *slog.Logger) *Api {
 	return &Api{
 		serv:                          srv,
 		UnimplementedChatServerServer: &chatServer.UnimplementedChatServerServer{},
+		logger:                        *log,
 	}
 }
 
 func (a *Api) Create(ctx context.Context, req *chatServer.CreateRequest) (*chatServer.CreateResponse, error) {
 	if len(req.Usernames) < 2 {
 		err := fmt.Errorf("the number of participants in the chat must be at least 2")
+		a.logger.Debug(err.Error())
 		return nil, err
 	}
 
 	resp, err := a.serv.Create(ctx, converter.ApiCreateToModel(req))
 	if err != nil {
+		a.logger.Debug(err.Error())
 		return nil, err
 	}
 
@@ -38,6 +43,7 @@ func (a *Api) Create(ctx context.Context, req *chatServer.CreateRequest) (*chatS
 
 func (a *Api) Delete(ctx context.Context, req *chatServer.DeleteRequest) (*emptypb.Empty, error) {
 	if err := a.serv.Delete(ctx, converter.ApiDeleteToModel(req)); err != nil {
+		a.logger.Debug(err.Error())
 		return nil, err
 	}
 
@@ -46,14 +52,19 @@ func (a *Api) Delete(ctx context.Context, req *chatServer.DeleteRequest) (*empty
 
 func (a *Api) SendMessage(ctx context.Context, req *chatServer.SendMessageRequest) (*emptypb.Empty, error) {
 	if req.From == "" {
-		return nil, fmt.Errorf("'From' field cannot be empty")
+		err := fmt.Errorf("'From' field cannot be empty")
+		a.logger.Debug(err.Error())
+		return nil, err
 	}
 
 	if req.Text == "" {
-		return nil, fmt.Errorf("'Text' field cannot be empty")
+		err := fmt.Errorf("'Text' field cannot be empty")
+		a.logger.Debug(err.Error())
+		return nil, err
 	}
 
 	if err := a.serv.SendMessage(ctx, converter.ApiSendMessageToModel(req)); err != nil {
+		a.logger.Debug(err.Error())
 		return nil, err
 	}
 

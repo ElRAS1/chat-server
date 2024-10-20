@@ -3,6 +3,7 @@ package chatServer
 import (
 	"context"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/ELRAS1/chat-server/internal/model"
@@ -21,21 +22,29 @@ func (s *repo) Create(ctx context.Context, req *model.CreateRequest) (*model.Cre
 		ToSql()
 
 	if err != nil {
-		return nil, fmt.Errorf("repo Create error: %v", err)
+		err = fmt.Errorf("repo Create error: %w", err)
+		s.logger.Debug(err.Error())
+		return nil, err
 	}
 
 	conn, err := s.Db.Acquire(ctx)
 	if err != nil {
-		return nil, fmt.Errorf("repo Create error: %v", err)
+		err = fmt.Errorf("repo Create error: %w", err)
+		s.logger.Debug(err.Error())
+		return nil, err
 	}
 	defer conn.Release()
 
 	var id int64
 	err = conn.QueryRow(ctx, query, args...).Scan(&id)
 	if err != nil {
-		return nil, fmt.Errorf("repo Create error: %w", err)
+		err = fmt.Errorf("repo Create error: %w", err)
+		s.logger.Debug(err.Error())
+		return nil, err
 	}
 
+	s.logger.Info(fmt.Sprintf("chat was created successfully: [participants]: %s",
+		strings.Join(req.Usernames, ", ")))
 	return &model.CreateResponse{Id: id}, nil
 }
 
@@ -49,25 +58,34 @@ func (s *repo) Delete(ctx context.Context, req *model.DeleteRequest) error {
 		ToSql()
 
 	if err != nil {
-		return fmt.Errorf("repo : failed to build delete query: %w", err)
+		err = fmt.Errorf("repo : failed to build delete query: %w", err)
+		s.logger.Debug(err.Error())
+		return err
 	}
 
 	conn, err := s.Db.Acquire(ctx)
 	if err != nil {
-		return fmt.Errorf("repo : failed to acquire database connection: %w", err)
+		err = fmt.Errorf("repo : failed to acquire database connection: %w", err)
+		s.logger.Debug(err.Error())
+		return err
 	}
 	defer conn.Release()
 
 	res, err := conn.Exec(ctx, query, args...)
 	if err != nil {
-		return fmt.Errorf("repo : failed to execute delete query: %w", err)
+		err = fmt.Errorf("repo : failed to execute delete query: %w", err)
+		s.logger.Debug(err.Error())
+		return err
 	}
 
 	rowsAffected := res.RowsAffected()
 	if rowsAffected == 0 {
-		return fmt.Errorf("repo : record not found")
+		err = fmt.Errorf("repo : record not found")
+		s.logger.Debug(err.Error())
+		return err
 	}
 
+	s.logger.Info("chat was deleted successfully")
 	return nil
 }
 
@@ -79,18 +97,25 @@ func (s *repo) SendMessage(ctx context.Context, req *model.SendMessageRequest) e
 		ToSql()
 
 	if err != nil {
-		return fmt.Errorf("repo SendMessage error: %v", err)
+		err = fmt.Errorf("repo SendMessage error: %w", err)
+		s.logger.Debug(err.Error())
+		return err
 	}
 
 	conn, err := s.Db.Acquire(ctx)
 	if err != nil {
-		return fmt.Errorf("repo : failed to acquire database connection: %w", err)
+		err = fmt.Errorf("repo : failed to acquire database connection: %w", err)
+		s.logger.Debug(err.Error())
+		return err
 	}
 	defer conn.Release()
 
 	if _, err = conn.Exec(ctx, query, args...); err != nil {
-		return fmt.Errorf("repo SendMessage error: %v", err)
+		err = fmt.Errorf("repo SendMessage error: %v", err)
+		s.logger.Debug(err.Error())
+		return err
 	}
 
+	s.logger.Info(fmt.Sprintf("chat was sent successfully to %s", req.From))
 	return nil
 }

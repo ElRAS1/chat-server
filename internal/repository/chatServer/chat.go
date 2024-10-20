@@ -1,6 +1,9 @@
 package chatServer
 
-import "github.com/jackc/pgx/v5/pgxpool"
+import (
+	"github.com/jackc/pgx/v5/pgxpool"
+	"log/slog"
+)
 
 const (
 	chatName      = "chats" //  Db name
@@ -17,11 +20,13 @@ const (
 )
 
 type repo struct {
-	Db *pgxpool.Pool
+	Db     *pgxpool.Pool
+	logger *slog.Logger
 }
 
-func New(dbClient *pgxpool.Pool) *repo {
+func New(dbClient *pgxpool.Pool, log *slog.Logger) *repo {
 	return &repo{
-		Db: dbClient,
+		Db:     dbClient,
+		logger: log,
 	}
 }
