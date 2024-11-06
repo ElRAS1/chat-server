@@ -26,8 +26,7 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
+	ctx := context.Background()
 
 	logger := logger.New(cfg.LogLevel, cfg.ConfigLog)
 	slog.SetDefault(logger)
@@ -38,7 +37,6 @@ func main() {
 	}
 
 	dbClient, err := config.InitializeDatabaseClient(ctx)
-
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -61,5 +59,4 @@ func main() {
 	sig := make(chan os.Signal, 1)
 	signal.Notify(sig, syscall.SIGINT, syscall.SIGTERM)
 	<-sig
-
 }

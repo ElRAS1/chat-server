@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+
 	"github.com/ELRAS1/chat-server/internal/model"
 )
 

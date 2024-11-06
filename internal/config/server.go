@@ -9,10 +9,10 @@ const (
 )
 
 type Server struct {
-	LogLevel  int    `yaml:"level" env-default:"0"`
-	Port      string `yaml:"addr" env-default:"50052"`
-	ConfigLog string `yaml:"configlogger" env-default:"prod"`
-	Network   string `yaml:"network" env-default:"tcp"`
+	LogLevel  int    `env-default:"0"     yaml:"level"`
+	Port      string `env-default:"50052" yaml:"addr"`
+	ConfigLog string `env-default:"prod"  yaml:"configlogger"`
+	Network   string `env-default:"tcp"   yaml:"network"`
 }
 
 func NewServerCfg() (*Server, error) {

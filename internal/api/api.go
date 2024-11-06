@@ -2,7 +2,7 @@ package api
 
 import (
 	"context"
-	"fmt"
+	"errors"
 	"log/slog"
 
 	"github.com/ELRAS1/chat-server/internal/converter"
@@ -26,15 +26,17 @@ func New(srv service.ChatServer, log *slog.Logger) *Api {
 }
 
 func (a *Api) Create(ctx context.Context, req *chatServer.CreateRequest) (*chatServer.CreateResponse, error) {
-	if len(req.Usernames) < 2 {
-		err := fmt.Errorf("the number of participants in the chat must be at least 2")
+	if len(req.GetUsernames()) < 2 {
+		err := errors.New("the number of participants in the chat must be at least 2")
 		a.logger.Debug(err.Error())
+
 		return nil, err
 	}
 
 	resp, err := a.serv.Create(ctx, converter.ApiCreateToModel(req))
 	if err != nil {
 		a.logger.Debug(err.Error())
+
 		return nil, err
 	}
 
@@ -44,6 +46,7 @@ func (a *Api) Create(ctx context.Context, req *chatServer.CreateRequest) (*chatS
 func (a *Api) Delete(ctx context.Context, req *chatServer.DeleteRequest) (*emptypb.Empty, error) {
 	if err := a.serv.Delete(ctx, converter.ApiDeleteToModel(req)); err != nil {
 		a.logger.Debug(err.Error())
+
 		return nil, err
 	}
 
@@ -51,20 +54,23 @@ func (a *Api) Delete(ctx context.Context, req *chatServer.DeleteRequest) (*empty
 }
 
 func (a *Api) SendMessage(ctx context.Context, req *chatServer.SendMessageRequest) (*emptypb.Empty, error) {
-	if req.From == "" {
-		err := fmt.Errorf("'From' field cannot be empty")
+	if req.GetFrom() == "" {
+		err := errors.New("'From' field cannot be empty")
 		a.logger.Debug(err.Error())
+
 		return nil, err
 	}
 
-	if req.Text == "" {
-		err := fmt.Errorf("'Text' field cannot be empty")
+	if req.GetText() == "" {
+		err := errors.New("'Text' field cannot be empty")
 		a.logger.Debug(err.Error())
+
 		return nil, err
 	}
 
 	if err := a.serv.SendMessage(ctx, converter.ApiSendMessageToModel(req)); err != nil {
 		a.logger.Debug(err.Error())
+
 		return nil, err
 	}
 

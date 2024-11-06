@@ -1,51 +1,80 @@
-# More info on config here: https://golangci-lint.run/usage/configuration/#config-file
 run:
-  concurrency: 8
-  timeout: 10m
+  concurrency: 4
+  timeout: 5m
   issues-exit-code: 1
-  tests: true
-  skip-dirs:
+  tests: false
+  issues-exclude-files:
+    - \.pb\.go$
+    - \.pb\.gw\.go$
+    - .proto
+  issues-exclude-dirs:
     - bin
     - vendor
     - var
     - tmp
     - .cache
-  skip-files:
-    - \.pb\.go$
-    - \.pb\.gw\.go$
+    - .vendor.protogen
+    - swagger-ui
+    - swagger
+    - migrations
+
 
 output:
-  format: colored-line-number
+  formats:
+    - format: colored-line-number
   print-issued-lines: true
   print-linter-name: true
 
 linters-settings:
-  govet:
-    check-shadowing: true
-  dupl:
-    threshold: 100
   goconst:
     min-len:         2
     min-occurrences: 2
- 
+
 linters:
   disable-all: true
   enable:
     - errcheck
     - goconst
+    - unparam
+    - unconvert
+    - tparallel
+    - whitespace
+    - testpackage
     - goimports
+    - tagalign
     - gosec
-    - govet
     - ineffassign
-    - megacheck
-    - revive
     - typecheck
     - unused
+    - sqlclosecheck
+    - sloglint
+    - reassign
+    - protogetter
+    - prealloc
+    - perfsprint
+    - paralleltest
+    - nosprintfhostport
+    - nolintlint
+    - noctx
+    - nlreturn
+    - nilnil
+    - nilerr
+    - nestif
+    - misspell
+    - mirror
+    - makezero
+    - gofumpt
+    - gocritic
+    - gocognit
+    - gci
+    - durationcheck
+    - dupword
+    - dupl
+    - bodyclose
 
 issues:
   exclude-use-default: false
   exclude:
-    # _ instead of err checks
     - G104
     - exported func .* returns unexported type .*, which can be annoying to use
     - should have a package comment

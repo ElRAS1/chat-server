@@ -2,6 +2,7 @@ package chatServer
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"strings"
 	"time"
@@ -20,10 +21,10 @@ func (s *repo) Create(ctx context.Context, req *model.CreateRequest) (*model.Cre
 		PlaceholderFormat(sq.Dollar).
 		Suffix("RETURNING id").
 		ToSql()
-
 	if err != nil {
 		err = fmt.Errorf("repo Create error: %w", err)
 		s.logger.Debug(err.Error())
+
 		return nil, err
 	}
 
@@ -31,6 +32,7 @@ func (s *repo) Create(ctx context.Context, req *model.CreateRequest) (*model.Cre
 	if err != nil {
 		err = fmt.Errorf("repo Create error: %w", err)
 		s.logger.Debug(err.Error())
+
 		return nil, err
 	}
 	defer conn.Release()
@@ -40,11 +42,13 @@ func (s *repo) Create(ctx context.Context, req *model.CreateRequest) (*model.Cre
 	if err != nil {
 		err = fmt.Errorf("repo Create error: %w", err)
 		s.logger.Debug(err.Error())
+
 		return nil, err
 	}
 
-	s.logger.Info(fmt.Sprintf("chat was created successfully: [participants]: %s",
-		strings.Join(req.Usernames, ", ")))
+	s.logger.Info("chat was created successfully: [participants]: %s",
+		strings.Join(req.Usernames, ", "))
+
 	return &model.CreateResponse{Id: id}, nil
 }
 
@@ -56,10 +60,10 @@ func (s *repo) Delete(ctx context.Context, req *model.DeleteRequest) error {
 		Where(sq.Eq{"id": req.Id}).
 		PlaceholderFormat(sq.Dollar).
 		ToSql()
-
 	if err != nil {
 		err = fmt.Errorf("repo : failed to build delete query: %w", err)
 		s.logger.Debug(err.Error())
+
 		return err
 	}
 
@@ -67,6 +71,7 @@ func (s *repo) Delete(ctx context.Context, req *model.DeleteRequest) error {
 	if err != nil {
 		err = fmt.Errorf("repo : failed to acquire database connection: %w", err)
 		s.logger.Debug(err.Error())
+
 		return err
 	}
 	defer conn.Release()
@@ -75,17 +80,20 @@ func (s *repo) Delete(ctx context.Context, req *model.DeleteRequest) error {
 	if err != nil {
 		err = fmt.Errorf("repo : failed to execute delete query: %w", err)
 		s.logger.Debug(err.Error())
+
 		return err
 	}
 
 	rowsAffected := res.RowsAffected()
 	if rowsAffected == 0 {
-		err = fmt.Errorf("repo : record not found")
+		err = errors.New("repo : record not found")
 		s.logger.Debug(err.Error())
+
 		return err
 	}
 
 	s.logger.Info("chat was deleted successfully")
+
 	return nil
 }
 
@@ -95,10 +103,10 @@ func (s *repo) SendMessage(ctx context.Context, req *model.SendMessageRequest) e
 		Values(req.ChatId, req.From, req.Text, req.Timestamp).
 		PlaceholderFormat(sq.Dollar).
 		ToSql()
-
 	if err != nil {
 		err = fmt.Errorf("repo SendMessage error: %w", err)
 		s.logger.Debug(err.Error())
+
 		return err
 	}
 
@@ -106,6 +114,7 @@ func (s *repo) SendMessage(ctx context.Context, req *model.SendMessageRequest) e
 	if err != nil {
 		err = fmt.Errorf("repo : failed to acquire database connection: %w", err)
 		s.logger.Debug(err.Error())
+
 		return err
 	}
 	defer conn.Release()
@@ -113,9 +122,11 @@ func (s *repo) SendMessage(ctx context.Context, req *model.SendMessageRequest) e
 	if _, err = conn.Exec(ctx, query, args...); err != nil {
 		err = fmt.Errorf("repo SendMessage error: %v", err)
 		s.logger.Debug(err.Error())
+
 		return err
 	}
 
-	s.logger.Info(fmt.Sprintf("chat was sent successfully to %s", req.From))
+	s.logger.Info("chat was sent successfully to %s", req.From)
+
 	return nil
 }

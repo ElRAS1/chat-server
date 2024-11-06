@@ -22,6 +22,6 @@ func ApiSendMessageToModel(req *chatServer.SendMessageRequest) *model.SendMessag
 		ChatId:    req.GetChatId(),
 		From:      req.GetFrom(),
 		Text:      req.GetText(),
-		Timestamp: req.Timestamp.AsTime(),
+		Timestamp: req.GetTimestamp().AsTime(),
 	}
 }

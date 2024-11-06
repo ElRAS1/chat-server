@@ -2,6 +2,7 @@ package config
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"os"
 	"time"
@@ -41,7 +42,7 @@ func InitializeDatabaseClient(ctx context.Context) (*pgxpool.Pool, error) {
 
 func newConnStr() (string, error) {
 	if err := godotenv.Load(); err != nil {
-		return "", fmt.Errorf("no .env file found")
+		return "", errors.New("no .env file found")
 	}
 
 	connStr := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
