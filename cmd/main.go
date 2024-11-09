@@ -22,7 +22,7 @@ import (
 )
 
 func main() {
-	cfg, err := config.NewServerCfg()
+	cfg, err := config.New()
 	if err != nil {
 		log.Fatalln(err)
 	}

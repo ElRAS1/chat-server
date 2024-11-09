@@ -18,7 +18,7 @@ type Config struct {
 	LogLevel    int    `env-default:"0"         yaml:"level"`
 }
 
-func NewServerCfg() (*Config, error) {
+func New() (*Config, error) {
 	cfg := &Config{}
 	if err := cleanenv.ReadConfig(pathToCfg, cfg); err != nil {
 		return nil, err
