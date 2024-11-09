@@ -6,6 +6,7 @@ import (
 	"log"
 	"log/slog"
 	"net"
+	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
@@ -31,7 +32,7 @@ func main() {
 	logger := logger.New(cfg.LogLevel, cfg.ConfigLog)
 	slog.SetDefault(logger)
 
-	listener, err := net.Listen(cfg.Network, cfg.Port)
+	listener, err := net.Listen(cfg.Network, cfg.GRPCPort)
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -50,12 +51,28 @@ func main() {
 	chatServer.RegisterChatServerServer(server, api.New(service, logger))
 
 	go func() {
+		logger.Info(fmt.Sprintf("grpc server is running on: %v", net.JoinHostPort(cfg.Host, cfg.GRPCPort)))
 		if err = server.Serve(listener); err != nil {
 			log.Fatalln(err)
 		}
 	}()
 
-	logger.Info(fmt.Sprintf("the server is running on the port %v", cfg.Port))
+	httpServer := config.InitHTTP(ctx, cfg.GRPCPort, cfg.HTTPPort)
+	go func() {
+		logger.Info(fmt.Sprintf("http server is running on: %v", net.JoinHostPort(cfg.Host, cfg.HTTPPort)))
+		if err = httpServer.ListenAndServe(); err != nil {
+			log.Fatalln(fmt.Sprintf("failed to http serve: %v", err))
+		}
+	}()
+
+	httpSwagger := config.InitSwagger()
+	go func() {
+		logger.Info(fmt.Sprintf("swagger ui is running on: %v", net.JoinHostPort(cfg.Host, cfg.SwaggerPort)))
+		if err = http.ListenAndServe(cfg.SwaggerPort, httpSwagger); err != nil {
+			log.Fatalln(fmt.Sprintf("failed to swagger serve: %v", err))
+		}
+	}()
+
 	sig := make(chan os.Signal, 1)
 	signal.Notify(sig, syscall.SIGINT, syscall.SIGTERM)
 	<-sig

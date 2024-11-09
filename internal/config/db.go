@@ -16,7 +16,6 @@ const (
 	deadline = 5
 )
 
-// InitializeDatabaseClient: configurations and database connection
 func InitializeDatabaseClient(ctx context.Context) (*pgxpool.Pool, error) {
 	const nm = "[InitializeDatabaseClient]"
 
@@ -45,13 +44,11 @@ func newConnStr() (string, error) {
 		return "", errors.New("no .env file found")
 	}
 
-	connStr := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
+	return fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
 		os.Getenv("DB_HOST"),
 		os.Getenv("DB_PORT"),
 		os.Getenv("DB_USER"),
 		os.Getenv("DB_PASSWORD"),
 		os.Getenv("DB_NAME"),
-	)
-
-	return connStr, nil
+	), nil
 }

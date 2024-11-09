@@ -6,7 +6,6 @@ run:
   issues-exclude-files:
     - \.pb\.go$
     - \.pb\.gw\.go$
-    - .proto
   issues-exclude-dirs:
     - bin
     - vendor
@@ -15,9 +14,6 @@ run:
     - .cache
     - .vendor.protogen
     - swagger-ui
-    - swagger
-    - migrations
-
 
 output:
   formats:

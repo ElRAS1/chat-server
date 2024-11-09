@@ -5,7 +5,6 @@ import (
 	"os"
 )
 
-// ConfigureLogger настраивает логгер с предоставленной конфигурацией(configures the logger with the provided configuration).
 func New(level int, cfg string) (logger *slog.Logger) {
 	switch cfg {
 	case "dev":
