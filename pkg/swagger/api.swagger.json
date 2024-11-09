@@ -28,6 +28,7 @@
   "paths": {
     "/v1/create": {
       "post": {
+        "summary": "Создания чата",
         "operationId": "chatServer_Create",
         "responses": {
           "200": {
@@ -58,8 +59,9 @@
         ]
       }
     },
-    "/v1/get": {
+    "/v1/delete": {
       "get": {
+        "summary": "Удаления чата",
         "operationId": "chatServer_Delete",
         "responses": {
           "200": {
@@ -92,6 +94,7 @@
     },
     "/v1/send-messages": {
       "post": {
+        "summary": "Отправка сообщения",
         "operationId": "chatServer_SendMessage",
         "responses": {
           "200": {

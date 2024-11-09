@@ -159,7 +159,7 @@ func RegisterChatServerHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/chatServer.ChatServer/Delete", runtime.WithHTTPPathPattern("/v1/get"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/chatServer.ChatServer/Delete", runtime.WithHTTPPathPattern("/v1/delete"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -270,7 +270,7 @@ func RegisterChatServerHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/chatServer.ChatServer/Delete", runtime.WithHTTPPathPattern("/v1/get"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/chatServer.ChatServer/Delete", runtime.WithHTTPPathPattern("/v1/delete"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -314,7 +314,7 @@ func RegisterChatServerHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 var (
 	pattern_ChatServer_Create_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "create"}, ""))
 
-	pattern_ChatServer_Delete_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "get"}, ""))
+	pattern_ChatServer_Delete_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "delete"}, ""))
 
 	pattern_ChatServer_SendMessage_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "send-messages"}, ""))
 )

@@ -46,7 +46,7 @@ func (s *repo) Create(ctx context.Context, req *model.CreateRequest) (*model.Cre
 		return nil, err
 	}
 
-	s.logger.Info("chat was created successfully: [participants]: %s",
+	s.logger.Info("chat was created successfully: [participants]: ",
 		strings.Join(req.Usernames, ", "))
 
 	return &model.CreateResponse{Id: id}, nil
@@ -92,7 +92,7 @@ func (s *repo) Delete(ctx context.Context, req *model.DeleteRequest) error {
 		return err
 	}
 
-	s.logger.Info("chat was deleted successfully")
+	s.logger.Info("chat was deleted successfully", req.Id)
 
 	return nil
 }
@@ -126,7 +126,7 @@ func (s *repo) SendMessage(ctx context.Context, req *model.SendMessageRequest) e
 		return err
 	}
 
-	s.logger.Info("chat was sent successfully to %s", req.From)
+	s.logger.Info("chat was sent successfully to ", req.From)
 
 	return nil
 }

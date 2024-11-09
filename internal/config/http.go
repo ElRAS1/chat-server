@@ -2,10 +2,10 @@ package config
 
 import (
 	"context"
-	"github.com/ELRAS1/chat-server/pkg/chatServer"
 	"log"
 	"net/http"
 
+	"github.com/ELRAS1/chat-server/pkg/chatServer"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"

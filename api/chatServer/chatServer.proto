@@ -28,17 +28,20 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
 };
 
 service chatServer {
+  // Создания чата
   rpc Create(CreateRequest) returns (CreateResponse) {
     option (google.api.http) = {
       post: "/v1/create"
       body: "*"
     };
   }
+  // Удаления чата
   rpc Delete(DeleteRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
-      get : "/v1/get"
+      get : "/v1/delete"
     };
   }
+  // Отправка сообщения
   rpc SendMessage(SendMessageRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       post: "/v1/send-messages"
